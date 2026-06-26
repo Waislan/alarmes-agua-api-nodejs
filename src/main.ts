@@ -6,6 +6,7 @@ import {
 } from '@nestjs/platform-fastify';
 import cors from '@fastify/cors';
 import { AppModule } from './app.module';
+import { setupSwagger } from './config/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -20,6 +21,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  setupSwagger(app);
   const port = Number(process.env.PORT ?? 3000);
   await app.listen(port, '0.0.0.0');
 }
