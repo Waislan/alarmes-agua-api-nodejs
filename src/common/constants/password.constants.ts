@@ -1,0 +1,1 @@
+export const BCRYPT_MAX_PASSWORD_LENGTH = 72;
