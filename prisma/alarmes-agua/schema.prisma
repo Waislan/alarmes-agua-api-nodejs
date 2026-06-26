@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/@prisma/alarmes-agua-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["agua"]
+}
+
+model User {
+  id            String         @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  email         String         @unique @db.VarChar(255)
+  password      String         @db.VarChar(60)
+  name          String         @db.VarChar(100)
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  deletedAt     DateTime?      @map("deleted_at")
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+  @@schema("agua")
+}
+
+model RefreshToken {
+  id        String   @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  token     String   @unique @db.VarChar(128)
+  userId    String   @map("user_id") @db.Uuid
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+  @@schema("agua")
+}
+
+model Product {
+  id        String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  name      String    @db.VarChar(100)
+  style     String    @unique @db.VarChar(100)
+  resume    String?   @db.VarChar(1000)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  deletedAt DateTime? @map("deleted_at")
+  sensors   Sensor[]
+  logs      Log[]
+
+  @@map("products")
+  @@schema("agua")
+}
+
+model Sensor {
+  id         String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  productId  String    @map("product_id") @db.Uuid
+  name       String    @db.VarChar(100)
+  algorithm  String    @db.VarChar(100)
+  resolution Int
+  frequency  String    @db.VarChar(50)
+  unit       String    @db.VarChar(100)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime  @updatedAt @map("updated_at")
+  deletedAt  DateTime? @map("deleted_at")
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  logs       Log[]
+
+  @@unique([productId, name])
+  @@map("sensors")
+  @@schema("agua")
+}
+
+model Log {
+  id           String    @id @default(dbgenerated("public.uuid_generate_v4()")) @db.Uuid
+  sensorId     String    @map("sensor_id") @db.Uuid
+  productId    String    @map("product_id") @db.Uuid
+  detectedDate DateTime  @db.Date @map("detected_date")
+  sourceCode   String    @map("source_code") @db.VarChar(50)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  deletedAt    DateTime? @map("deleted_at")
+  sensor       Sensor    @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  product      Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([sensorId, detectedDate])
+  @@map("logs")
+  @@schema("agua")
+}
