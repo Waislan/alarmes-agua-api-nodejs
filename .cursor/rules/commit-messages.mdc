@@ -1,0 +1,28 @@
+---
+description: Conventional Commits for git messages (Generate Commit Message)
+alwaysApply: true
+---
+
+# Commit messages
+
+When generating commit messages for this repository, use **Conventional Commits** in **English**.
+
+## Format
+
+```
+<type>: <subject>
+```
+
+**Types:** `feat`, `fix`, `refactor`, `chore`, `docs`, `build`, `test`, `perf`
+
+**Subject:** English, verb in **third person** (`adds`, `fixes`, `updates`, `configures`), lowercase after `:`, max 72 chars, no period.
+
+**Scope:** omit by default (use `feat: adds ...`, not `feat(init): ...` unless scope is essential).
+
+**Avoid:** Portuguese, imperative verbs (`add`, `fix`), vague messages (`update`, `wip`); never mention `.env` or secrets.
+
+**Examples:**
+- `feat: adds initial structure of API with NestJS and Prisma`
+- `feat: adds JWT authentication with opaque refresh tokens`
+- `fix: qualifies uuid_generate_v4 with public schema`
+- `chore: configures Docker Compose with API-only service`
