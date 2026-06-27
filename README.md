@@ -84,6 +84,19 @@ O entrypoint executa `prisma migrate deploy` antes de iniciar a API (salvo `SKIP
 
 `DELETE` realiza soft delete do produto e dos sensores/detecções vinculados.
 
+## Endpoints — Sensores
+
+| Método | Rota | Autenticação |
+|--------|------|--------------|
+| POST | `/sensors` | Bearer JWT |
+| GET | `/sensors` | Bearer JWT |
+| GET | `/sensors/:sensorId` | Bearer JWT |
+| PUT | `/sensors/:sensorId` | Bearer JWT |
+| DELETE | `/sensors/:sensorId` | Bearer JWT |
+| GET | `/products/:productId/sensors` | Bearer JWT |
+
+`DELETE` em sensor realiza soft delete das detecções vinculadas. Respostas incluem `_count.logs` (detecções ativas).
+
 ## OpenAPI (Swagger)
 
 Com a API em execução:
@@ -115,3 +128,5 @@ curl http://localhost:3000/auth/me \
 - `prisma/alarmes-agua/` — schema Prisma (PostgreSQL, schema `agua`)
 - `src/modules/auth/` — autenticação JWT
 - `src/modules/products/` — CRUD de produtos geoambientais
+- `src/modules/sensors/` — CRUD de sensores satelitais
+- `src/modules/logs|users/` — stubs (fases futuras)
